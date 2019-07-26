@@ -74,6 +74,7 @@ class TelegramBot : TelegramLongPollingBot {
             sendDocument.chatId = chatId.toString()
             try {
                 execute(sendDocument)
+                logger.info("send file: " + file.name)
             }catch (e:TelegramApiException){
                 logger.error("send message fail", e)
             }
@@ -90,6 +91,7 @@ class TelegramBot : TelegramLongPollingBot {
         sendMessage.chatId = chatId.toString()
         try {
             execute(sendMessage)
+            logger.info("send message: " + text)
         }catch (e:TelegramApiException){
             logger.error("text send fail", e)
         }
