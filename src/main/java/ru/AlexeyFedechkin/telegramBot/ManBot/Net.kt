@@ -8,15 +8,18 @@ import java.net.URL
 
 class Net {
     private val logger = KotlinLogging.logger {  }
-    private val BASE_URL = "http://man.he.net/man"
-    private val BASE_PATH = "man/"
+    companion object {
+        private const val BASE_URL = "http://man.he.net/man"
+        private const val BASE_PATH = "man/"
+    }
+
     /**
      *find man page
      * @param name name of unix program
      * @return file with man page from url or file
      */
     fun find(name:String): File?{
-        val path = BASE_PATH + name;
+        val path = Companion.BASE_PATH + name
         if (File(path).isFile){
             return File(path)
         } else{
@@ -35,11 +38,11 @@ class Net {
      */
     private fun getStringFromUrl(name:String):String?{
         for (i in 0..8){
-            val url = URL(BASE_URL+ i + "/" +  name)
+            val url = URL(Companion.BASE_URL + i + "/" +  name)
             val urlConnection =url.openConnection() as HttpURLConnection
             try {
                 val text = urlConnection.inputStream.bufferedReader().readText()
-                logger.info("get data from: " + url)
+                logger.info("get data from: $url")
                 if (validate(text, name)){
                     return clean(text)
                 }
@@ -47,7 +50,7 @@ class Net {
                 urlConnection.disconnect()
             }
         }
-        return null;
+        return null
     }
 
     private val copyright = "Man Pages Copyright Respective Owners. Site Copyright (C) 1994 - 2019 Hurricane Electric. All Rights Reserved."
@@ -77,11 +80,11 @@ class Net {
      * @return saved file
      */
     private fun stringToFile(text:String, name:String): File{
-        val path = BASE_PATH + name;
+        val path = Companion.BASE_PATH + name
         val file = File(path)
         file.createNewFile()
         file.writeText(text)
-        logger.info("create file: " + path)
+        logger.info("create file: $path")
         return file
     }
 }

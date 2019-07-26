@@ -10,11 +10,12 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException
 import java.io.File
+import kotlin.system.exitProcess
 
 
 class TelegramBot : TelegramLongPollingBot {
     constructor(defaultBotOptions: DefaultBotOptions) : super(defaultBotOptions)
-    constructor();
+    constructor()
 
     private val logger = KotlinLogging.logger {}
     private val net = Net()
@@ -39,7 +40,7 @@ class TelegramBot : TelegramLongPollingBot {
             logger.info("bot register")
         } catch (e:TelegramApiException){
             logger.error("bot start fail", e)
-            System.exit(1)
+            exitProcess(1)
         }
     }
 
@@ -51,14 +52,14 @@ class TelegramBot : TelegramLongPollingBot {
         if (update!!.hasMessage()){
             val chatId = update.message.chatId
             val message = update.message.text
-            if (message.equals("/start")){
+            if (message == "/start"){
                 send("Здраствуйте, это бот для получения man страниц. Просто, введите имя программы и бот" +
                         " пришлет вам текстоый файл с man страницей для нее", chatId)
                 return
             } else if (message.startsWith("/")){
                 return
             }
-            val result = net.find(update.message.text);
+            val result = net.find(update.message.text)
             if (result != null){
                 send(result, chatId)
             } else {
@@ -69,16 +70,18 @@ class TelegramBot : TelegramLongPollingBot {
 
     /**
      * send file
+     * if file id is cached sendingg by file id
      * @param file file with man page
      * @param chatId id of chat
      */
     private fun send(file: File, chatId: Long) {
-        val sendDocument = SendDocument();
+        val sendDocument = SendDocument()
         sendDocument.chatId = chatId.toString()
         try {
             if (Cache.contain(file.name)){
                 sendDocument.setDocument(Cache.get(file.name))
                 execute(sendDocument)
+                logger.info("send file by fileId")
             } else {
                 sendDocument.setDocument(file)
                 val res = execute(sendDocument)
@@ -101,7 +104,7 @@ class TelegramBot : TelegramLongPollingBot {
         sendMessage.chatId = chatId.toString()
         try {
             execute(sendMessage)
-            logger.info("send message: " + text)
+            logger.info("send message: $text")
         }catch (e:TelegramApiException){
             logger.error("text send fail", e)
         }
