@@ -67,7 +67,7 @@ class Net {
      * @return true if text contain man page
      */
     private fun validate(text: String,name:String ): Boolean {
-        return text.contains(name)
+        return !text.contains("No matches for")
     }
 
     /**

@@ -1,6 +1,5 @@
 package ru.AlexeyFedechkin.telegramBot.ManBot
 
-import com.google.common.base.Splitter
 import mu.KotlinLogging
 import org.telegram.telegrambots.bots.DefaultBotOptions
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
@@ -8,13 +7,9 @@ import org.telegram.telegrambots.meta.ApiContext
 import org.telegram.telegrambots.meta.TelegramBotsApi
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
-import org.telegram.telegrambots.meta.api.objects.InputFile
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException
 import java.io.File
-import java.lang.reflect.Array.getChar
-import kotlin.math.ceil
-import kotlin.math.min
 
 
 class TelegramBot : TelegramLongPollingBot {
@@ -44,6 +39,7 @@ class TelegramBot : TelegramLongPollingBot {
             logger.info("bot register")
         } catch (e:TelegramApiException){
             logger.error("bot start fail", e)
+            System.exit(1)
         }
     }
 
@@ -110,7 +106,11 @@ class TelegramBot : TelegramLongPollingBot {
      * @return username of bot
      */
     override fun getBotUsername(): String {
-        return Config.username
+        return if (Config.isTesting){
+            Config.testingUsername
+        } else{
+            Config.username
+        }
     }
 
     /**
@@ -118,7 +118,10 @@ class TelegramBot : TelegramLongPollingBot {
      * @return bot token
      */
     override fun getBotToken(): String {
-        return Config.token
+        return if (Config.isTesting){
+            Config.testingToken
+        } else{
+            Config.token
+        }
     }
-
 }
