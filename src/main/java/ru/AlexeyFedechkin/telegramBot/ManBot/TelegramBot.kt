@@ -58,6 +58,7 @@ class TelegramBot : TelegramLongPollingBot {
             if (message.equals("/start")){
                 send("Здраствуйте, это бот для получения man страниц. Просто, введите имя программы и бот" +
                         " пришлет вам текстоый файл с man страницей для нее", chatId)
+                return
             } else if (message.startsWith("/")){
                 return
             }
