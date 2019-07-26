@@ -19,7 +19,7 @@ class Net {
      * @return file with man page from url or file
      */
     fun find(name:String): File?{
-        val path = Companion.BASE_PATH + name
+        val path = BASE_PATH + name
         if (File(path).isFile){
             return File(path)
         } else{
@@ -38,7 +38,7 @@ class Net {
      */
     private fun getStringFromUrl(name:String):String?{
         for (i in 0..8){
-            val url = URL(Companion.BASE_URL + i + "/" +  name)
+            val url = URL("$BASE_URL$i/$name")
             val urlConnection =url.openConnection() as HttpURLConnection
             try {
                 val text = urlConnection.inputStream.bufferedReader().readText()

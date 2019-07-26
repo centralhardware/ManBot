@@ -81,12 +81,12 @@ class TelegramBot : TelegramLongPollingBot {
             if (Cache.contain(file.name)){
                 sendDocument.setDocument(Cache.get(file.name))
                 execute(sendDocument)
-                logger.info("send file by fileId")
+                logger.info("send file by fileId: ${file.name}")
             } else {
                 sendDocument.setDocument(file)
                 val res = execute(sendDocument)
                 Cache.add(file.name, res.document.fileId)
-                logger.info("send file: " + file.name)
+                logger.info("send file: f${file.name}")
             }
         }catch (e:TelegramApiException){
             logger.info("send file fail", e)

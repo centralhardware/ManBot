@@ -1,6 +1,7 @@
 package ru.AlexeyFedechkin.telegramBot.ManBot
 
-import java.util.*
+import java.util.ResourceBundle
+
 class Resource {
     private val resource = ResourceBundle.getBundle("string")
 
