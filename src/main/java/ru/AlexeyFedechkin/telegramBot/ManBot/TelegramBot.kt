@@ -54,6 +54,13 @@ class TelegramBot : TelegramLongPollingBot {
     override fun onUpdateReceived(update: Update?) {
         if (update!!.hasMessage()){
             val chatId = update.message.chatId
+            val message = update.message.text
+            if (message.equals("/start")){
+                send("Здраствуйте, это бот для получения man страниц. Просто, введите имя программы и бот" +
+                        " пришлет вам текстоый файл с man страницей для нее", chatId)
+            } else if (message.startsWith("/")){
+                return
+            }
             val result = net.find(update.message.text);
             if (result != null){
                 send(result, chatId)
