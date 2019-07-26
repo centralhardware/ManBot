@@ -72,16 +72,22 @@ class TelegramBot : TelegramLongPollingBot {
      * @param file file with man page
      * @param chatId id of chat
      */
-    private fun send(file: File, chatId: Long?) {
-            val sendDocument = SendDocument();
-            sendDocument.setDocument(file)
-            sendDocument.chatId = chatId.toString()
-            try {
+    private fun send(file: File, chatId: Long) {
+        val sendDocument = SendDocument();
+        sendDocument.chatId = chatId.toString()
+        try {
+            if (Cache.contain(file.name)){
+                sendDocument.setDocument(Cache.get(file.name))
                 execute(sendDocument)
+            } else {
+                sendDocument.setDocument(file)
+                val res = execute(sendDocument)
+                Cache.add(file.name, res.document.fileId)
                 logger.info("send file: " + file.name)
-            }catch (e:TelegramApiException){
-                logger.error("send message fail", e)
             }
+        }catch (e:TelegramApiException){
+            logger.info("send file fail", e)
+        }
     }
 
     /**
